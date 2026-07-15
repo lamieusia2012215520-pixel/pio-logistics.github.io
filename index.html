@@ -3904,6 +3904,13 @@
       min-height: 450px;
       align-self: center;
     }
+    .network-cert-grid.single-certificate {
+      grid-template-columns: minmax(300px, min(62vw, 760px));
+      justify-content: center;
+    }
+    .network-cert-grid.single-certificate .network-cert-card {
+      min-height: min(62vh, 590px);
+    }
     .sea-clean-layout .main-photo { inset: 0 20% 0 0; }
     .sea-clean-layout .detail-photo.top {
       width: 39%;
@@ -7456,6 +7463,22 @@
         padding-bottom: max(72px, calc(env(safe-area-inset-bottom) + 56px)) !important;
       }
     }
+    /* Network slide now presents the single JCTrans credential as the hero certificate. */
+    .network-cert-grid.single-certificate {
+      grid-template-columns: minmax(300px, min(62vw, 760px)) !important;
+      justify-content: center !important;
+    }
+    .network-cert-grid.single-certificate .network-cert-card {
+      min-height: min(62vh, 590px) !important;
+    }
+    @media (max-width: 760px) {
+      .network-cert-grid.single-certificate {
+        grid-template-columns: minmax(220px, 82vw) !important;
+      }
+      .network-cert-grid.single-certificate .network-cert-card {
+        min-height: min(48vh, 360px) !important;
+      }
+    }
 </style>
 </head>
 <body>
@@ -7548,20 +7571,10 @@
           <div class="eyebrow">01 · Network certificates</div>
           <h2>Global Network Certificates</h2>
         </div>
-        <div class="network-cert-grid" aria-label="PIO Logistics network certificates">
+        <div class="network-cert-grid single-certificate" aria-label="PIO Logistics network certificate">
           <article class="network-cert-card">
             <div class="network-cert-logo">
               <img src="presentation-assets/jctrans-certificate.png" alt="PIO Logistics JCTrans Premium member certificate">
-            </div>
-          </article>
-          <article class="network-cert-card">
-            <div class="network-cert-logo">
-              <img src="presentation-assets/CERTIFICATE OF OLO MEMBERSHIP - 04-2025.jpg" alt="OLO membership certificate">
-            </div>
-          </article>
-          <article class="network-cert-card">
-            <div class="network-cert-logo">
-              <img src="presentation-assets/tIXRYJ52_400x400.jpg" alt="Freightnet logo">
             </div>
           </article>
         </div>
