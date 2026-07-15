@@ -2610,6 +2610,12 @@
     }
     .freight-split img:first-child { clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%); }
     .freight-split img:last-child { margin-left: -14%; width: 114%; }
+    .truck-split img:first-child {
+      object-position: 50% 64%;
+    }
+    .truck-split img:last-child {
+      object-position: 50% 50%;
+    }
     .cover-service-label {
       position: absolute;
       left: 22px;
@@ -7540,8 +7546,8 @@
         <div class="cover-service-grid" aria-label="PIO Logistics core services">
           <article class="cover-service-card is-primary is-freight-hero">
             <div class="freight-split" aria-hidden="true">
-              <img src="presentation-assets/stock-freight-sea.jpg" alt="">
-              <img src="presentation-assets/stock-freight-air.jpg" alt="">
+              <img src="presentation-assets/cover-freight-sea-front.jpg" alt="">
+              <img src="presentation-assets/cover-freight-air-front.jpg" alt="">
             </div>
             <div class="cover-service-label">
               <h3>International Freight</h3>
@@ -7549,7 +7555,10 @@
             </div>
           </article>
           <article class="cover-service-card is-truck">
-            <img src="presentation-assets/cover-service-trucking.jpg" alt="Truck unloading cargo at customer site">
+            <div class="freight-split truck-split" aria-hidden="true">
+              <img src="presentation-assets/cover-trucking-front-road.jpg" alt="">
+              <img src="presentation-assets/cover-trucking-front-warehouse.jpg" alt="">
+            </div>
             <div class="cover-service-label">
               <h3>Trucking</h3>
               <p>Truck planning, unloading equipment and on-site manpower.</p>
