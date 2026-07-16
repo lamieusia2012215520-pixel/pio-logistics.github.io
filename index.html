@@ -466,6 +466,23 @@
       border-radius: inherit;
       transition: transform .32s var(--ease), filter .32s ease;
     }
+    .photo::before {
+      content: "";
+      position: absolute;
+      top: clamp(8px, .8vw, 14px);
+      left: clamp(8px, .8vw, 14px);
+      z-index: 8;
+      width: min(30%, 142px);
+      min-width: 72px;
+      height: clamp(28px, 3.2vw, 42px);
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: 999px;
+      background: rgba(255,255,255,.88) url("presentation-assets/pio-logo-header.png") center / calc(100% - 18px) auto no-repeat;
+      box-shadow: 0 8px 24px rgba(9,35,78,.18);
+      backdrop-filter: blur(10px) saturate(1.1);
+      -webkit-backdrop-filter: blur(10px) saturate(1.1);
+      pointer-events: none;
+    }
     .photo::after {
       content: "";
       position: absolute;
@@ -2749,6 +2766,36 @@
       object-fit: contain;
       background: rgba(255,255,255,.08);
       transition: opacity .16s ease, transform .16s var(--ease);
+    }
+    .image-lightbox__brandmark {
+      position: absolute;
+      top: clamp(14px, 1.5vw, 24px);
+      left: clamp(14px, 1.5vw, 24px);
+      z-index: 9;
+      display: none;
+      width: clamp(130px, 14vw, 220px);
+      height: clamp(42px, 4vw, 58px);
+      border: 1px solid rgba(255,255,255,.78);
+      border-radius: 999px;
+      background: rgba(255,255,255,.9) url("presentation-assets/pio-logo-header.png") center / calc(100% - 24px) auto no-repeat;
+      box-shadow: 0 12px 34px rgba(4,17,39,.24);
+      backdrop-filter: blur(12px) saturate(1.12);
+      -webkit-backdrop-filter: blur(12px) saturate(1.12);
+      pointer-events: none;
+    }
+    .image-lightbox.has-cargo-watermark .image-lightbox__brandmark {
+      display: block;
+    }
+    .image-lightbox.is-map-view .image-lightbox__brandmark,
+    .image-lightbox.is-wide-art .image-lightbox__brandmark {
+      display: none;
+    }
+    .deck img,
+    .image-lightbox img {
+      -webkit-user-drag: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
     .image-lightbox img.is-switching {
       opacity: .72;
@@ -8176,7 +8223,8 @@
         <button class="image-lightbox__nav prev" type="button" aria-label="Previous image">&lsaquo;</button>
         <button class="image-lightbox__nav next" type="button" aria-label="Next image">&rsaquo;</button>
         <div class="image-lightbox__frame" role="dialog" aria-modal="true" aria-label="Expanded presentation image">
-          <img alt="">
+          <img alt="" draggable="false">
+          <div class="image-lightbox__brandmark" aria-label="PIO Logistics watermark"></div>
           <div class="image-lightbox__caption" aria-live="polite"></div>
           <div class="image-lightbox__map-pin" aria-hidden="true"></div>
           <div class="image-lightbox__map-caption" aria-live="polite"></div>
@@ -8187,6 +8235,18 @@
         <div class="image-lightbox__counter" aria-live="polite"></div>
       `;
       document.body.appendChild(imageLightbox);
+      document.querySelectorAll('.deck img').forEach((image) => {
+        image.draggable = false;
+      });
+      document.addEventListener('dragstart', (event) => {
+        if (event.target instanceof HTMLImageElement) event.preventDefault();
+      });
+      document.addEventListener('contextmenu', (event) => {
+        const target = event.target;
+        if (target instanceof Element && target.closest('.deck img, .image-lightbox')) {
+          event.preventDefault();
+        }
+      });
       const lightboxImage = imageLightbox.querySelector('img');
       const lightboxCaption = imageLightbox.querySelector('.image-lightbox__caption');
       const closeLightboxButton = imageLightbox.querySelector('.image-lightbox__close');
@@ -8612,6 +8672,9 @@
         const image = galleryImages[galleryIndex];
         const imageSrc = image.currentSrc || image.src;
         const isWideArt = Boolean(image.closest('.air-network-card'));
+        const isProtectedCargo = !isWideArt
+          && !image.closest('.network-cert-card')
+          && !/(?:map-|certificate|logo|flag)/i.test(imageSrc);
         resetMapZoom();
         lightboxImage.classList.add('is-switching');
         lightboxImage.style.setProperty('--gallery-shift', `${galleryDirection * 10}px`);
@@ -8627,6 +8690,7 @@
         lightboxCounter.textContent = `${galleryIndex + 1} / ${galleryImages.length}`;
         imageLightbox.classList.toggle('has-gallery', galleryImages.length > 1);
         imageLightbox.classList.toggle('is-wide-art', isWideArt);
+        imageLightbox.classList.toggle('has-cargo-watermark', isProtectedCargo);
         currentAnnotatedMapSrc = '';
         currentClusterMapBaseSrc = '';
         const clusterMapSet = getClusterMapHotspots(imageSrc);
@@ -8717,6 +8781,7 @@
         imageLightbox.classList.remove('is-cluster-map-view');
         imageLightbox.classList.remove('is-map-zoomed');
         imageLightbox.classList.remove('is-wide-art');
+        imageLightbox.classList.remove('has-cargo-watermark');
         lightboxOpen = false;
         window.setTimeout(() => {
           if (!lightboxOpen) {
